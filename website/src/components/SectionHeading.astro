@@ -1,0 +1,35 @@
+---
+interface Props {
+  text: string;
+}
+
+const { text } = Astro.props;
+---
+
+<div class="section-heading">
+  <span>{text}</span>
+</div>
+
+<style>
+  .section-heading {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  .section-heading::before {
+    content: "";
+    display: block;
+    width: 40px;
+    height: 2px;
+    background: var(--primary-dark);
+  }
+  .section-heading span {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    font-family: var(--font-sans);
+    color: var(--primary-dark);
+  }
+</style>

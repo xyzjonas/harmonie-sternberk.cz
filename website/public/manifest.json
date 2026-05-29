@@ -1,0 +1,16 @@
+{
+  "name": "Harmonie Šternberk",
+  "short_name": "Harmonie",
+  "description": "Symfonický dechový orchestr založený v roce 1957",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#e3051a",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

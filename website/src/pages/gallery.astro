@@ -1,0 +1,410 @@
+---
+import { Image } from "astro:assets";
+import BaseHead from "../components/BaseHead.astro";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import StructuredData from "../components/StructuredData.astro";
+
+const galleryImages = [
+  { src: "/photos/gallery/1.JPG", alt: "Harmonie Šternberk" },
+  { src: "/photos/gallery/2.jpg", alt: "Harmonie Šternberk" },
+  { src: "/photos/gallery/3.webp", alt: "Harmonie Šternberk" },
+  { src: "/photos/gallery/4.jpg", alt: "Harmonie Šternberk" },
+  { src: "/photos/gallery/5.jpg", alt: "Harmonie Šternberk" },
+  { src: "/photos/gallery/dirigent.jpg", alt: "Dirigent" },
+  {
+    src: "/photos/gallery/photo_2022-11-01_21-08-15.jpg",
+    alt: "Harmonie Šternberk",
+  },
+  {
+    src: "/photos/gallery/photo_2022-11-01_21-08-26.jpg",
+    alt: "Harmonie Šternberk",
+  },
+  {
+    src: "/photos/gallery/photo_2022-11-01_21-08-31.jpg",
+    alt: "Harmonie Šternberk",
+  },
+  {
+    src: "/photos/gallery/photo_2022-11-01_21-08-35.jpg",
+    alt: "Harmonie Šternberk",
+  },
+  {
+    src: "/photos/gallery/photo_2022-11-01_21-08-43.jpg",
+    alt: "Harmonie Šternberk",
+  },
+];
+
+const videos = [
+  "https://www.youtube-nocookie.com/embed/y1ssCVafLEY",
+  "https://www.youtube-nocookie.com/embed/12-7QGw0gdA",
+  "https://www.youtube-nocookie.com/embed/fj7J4YRx4i8",
+  "https://www.youtube-nocookie.com/embed/icrXf5jaRmE?si=8ALSCWplQkzRQ6kV",
+];
+---
+
+<!doctype html>
+<html lang="cs">
+  <head>
+    <BaseHead
+      title="Galerie - Harmonie Šternberk"
+      description="Fotogalerie orchestru Harmonie Šternberk"
+    />
+    <StructuredData
+      breadcrumbs={[
+        { name: "Domů", url: "/" },
+        { name: "Galerie", url: "/gallery" },
+      ]}
+    />
+  </head>
+  <body>
+    <Header />
+    <main>
+      <section class="gallery-section">
+        <div class="gallery-header">
+          <h1>Galerie</h1>
+          <p class="description">
+            Momentky z koncertů a akcí orchestru Harmonie Šternberk
+          </p>
+        </div>
+        <SectionHeading text="Fotografie" />
+        <div class="gallery-grid">
+          {
+            galleryImages.map((image, index) => (
+              <div class="gallery-item" data-index={index}>
+                <img src={image.src} alt={image.alt} loading="lazy" />
+              </div>
+            ))
+          }
+        </div>
+      </section>
+
+      <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" aria-label="Close">&times;</button>
+        <button class="lightbox-nav lightbox-prev" aria-label="Previous">&lsaquo;</button>
+        <button class="lightbox-nav lightbox-next" aria-label="Next">&rsaquo;</button>
+        <img class="lightbox-image" src="" alt="" />
+      </div>
+
+      <section class="videos-section">
+        <div class="videos-header">
+          <SectionHeading text="Videozáznamy" />
+          <p class="description">
+            Další videa můžete shlédnout na našem <a
+              href="https://www.youtube.com/channel/UCkTMDhD8DZdeOrE5NJttvFQ"
+              target="_blank"
+              rel="noopener noreferrer">Youtube kanále</a
+            >.
+          </p>
+        </div>
+
+        <div class="videos-grid">
+          {
+            videos.map((videoUrl) => (
+              <div class="video-item">
+                <iframe
+                  src={videoUrl}
+                  title="YouTube video player"
+                  frameborder="0"
+                  allow="encrypted-media; gyroscope;"
+                  allowfullscreen
+                />
+              </div>
+            ))
+          }
+        </div>
+      </section>
+    </main>
+    <Footer />
+
+    <script define:vars={{ galleryImages }}>
+      let currentIndex = 0;
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImage = document.querySelector('.lightbox-image');
+      const galleryItems = document.querySelectorAll('.gallery-item');
+      const closeBtn = document.querySelector('.lightbox-close');
+      const prevBtn = document.querySelector('.lightbox-prev');
+      const nextBtn = document.querySelector('.lightbox-next');
+
+      function openLightbox(index) {
+        currentIndex = index;
+        lightboxImage.src = galleryImages[currentIndex].src;
+        lightboxImage.alt = galleryImages[currentIndex].alt;
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeLightbox() {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      function showPrev() {
+        currentIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
+        lightboxImage.src = galleryImages[currentIndex].src;
+        lightboxImage.alt = galleryImages[currentIndex].alt;
+      }
+
+      function showNext() {
+        currentIndex = (currentIndex + 1) % galleryImages.length;
+        lightboxImage.src = galleryImages[currentIndex].src;
+        lightboxImage.alt = galleryImages[currentIndex].alt;
+      }
+
+      galleryItems.forEach((item, index) => {
+        item.addEventListener('click', () => openLightbox(index));
+      });
+
+      closeBtn.addEventListener('click', closeLightbox);
+      prevBtn.addEventListener('click', showPrev);
+      nextBtn.addEventListener('click', showNext);
+
+      lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) closeLightbox();
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (!lightbox.classList.contains('active')) return;
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') showPrev();
+        if (e.key === 'ArrowRight') showNext();
+      });
+    </script>
+  </body>
+</html>
+
+<style>
+  main {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  .gallery-section {
+    width: 100%;
+    max-width: var(--content-width);
+    margin: 0 auto;
+    padding: 4rem 1rem;
+  }
+
+  .gallery-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .gallery-header h1 {
+    margin: 0.5rem 0 1rem;
+  }
+
+  .description {
+    font-family: var(--font-serif);
+    font-size: 1.125rem;
+    margin: 0;
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 0.7rem;
+  }
+
+  @media (min-width: 640px) {
+    .gallery-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 768px) {
+    .gallery-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .gallery-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .gallery-item {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: #f5f5f5;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .gallery-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  }
+
+  .gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .gallery-item:hover img {
+    transform: scale(1.05);
+  }
+
+  .lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .lightbox.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .lightbox-image {
+    max-width: 90%;
+    max-height: 90vh;
+    object-fit: contain;
+    user-select: none;
+  }
+
+  .lightbox-close {
+    position: absolute;
+    top: 1.5rem;
+    right: 2rem;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 3rem;
+    cursor: pointer;
+    padding: 0;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s ease;
+    font-weight: 300;
+    line-height: 1;
+  }
+
+  .lightbox-close:hover {
+    opacity: 0.7;
+  }
+
+  .lightbox-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    font-size: 3rem;
+    cursor: pointer;
+    padding: 1rem 1.5rem;
+    transition: background 0.2s ease;
+    font-weight: 300;
+    line-height: 1;
+  }
+
+  .lightbox-nav:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .lightbox-prev {
+    left: 1rem;
+  }
+
+  .lightbox-next {
+    right: 1rem;
+  }
+
+  @media (max-width: 768px) {
+    .lightbox-close {
+      top: 1rem;
+      right: 1rem;
+      font-size: 2.5rem;
+    }
+
+    .lightbox-nav {
+      font-size: 2.5rem;
+      padding: 0.5rem 1rem;
+    }
+
+    .lightbox-prev {
+      left: 0.5rem;
+    }
+
+    .lightbox-next {
+      right: 0.5rem;
+    }
+  }
+
+  .videos-section {
+    width: 100%;
+    max-width: var(--content-width);
+    margin: 0 auto;
+    padding: 4rem 1rem;
+    border-top: 1px solid rgba(227, 5, 26, 0.1);
+  }
+
+  .videos-header {
+    margin-bottom: 2rem;
+  }
+
+  .videos-header h2 {
+    margin: 0 0 1rem;
+  }
+
+  .videos-header a {
+    color: var(--primary);
+    text-decoration: none;
+    border-bottom: 1px solid var(--primary);
+    transition: opacity 0.2s ease;
+  }
+
+  .videos-header a:hover {
+    opacity: 0.7;
+  }
+
+  .videos-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .videos-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .video-item {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    border: 1px solid rgba(227, 5, 26, 0.1);
+  }
+
+  .video-item iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+</style>

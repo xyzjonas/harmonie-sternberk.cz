@@ -1,0 +1,197 @@
+---
+import type { CollectionEntry } from "astro:content";
+import BaseHead from "../components/BaseHead.astro";
+import Footer from "../components/Footer.astro";
+import FormattedDate from "../components/FormattedDate.astro";
+import Header from "../components/Header.astro";
+import ProClenyLock from "../components/ProClenyLock.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import CalendarIcon from "../components/icons/CalendarIcon.astro";
+import StructuredData from "../components/StructuredData.astro";
+import { SITE_TITLE } from "../consts";
+
+type Props = CollectionEntry<"proCleny">["data"];
+
+const { title, subtitle, datetime } = Astro.props;
+---
+
+<html lang="cs">
+  <head>
+    <BaseHead
+      title={`${title} | ${SITE_TITLE}`}
+      description={subtitle || title}
+    />
+    <StructuredData
+      breadcrumbs={[
+        { name: "Domů", url: "/" },
+        { name: "Pro členy", url: "/pro-cleny" },
+        { name: title, url: Astro.url.pathname },
+      ]}
+    />
+    <style>
+      main {
+        width: 100%;
+        max-width: var(--content-width);
+        margin: 0 auto;
+        padding: 4rem 1rem;
+      }
+
+      .content-header {
+        margin-bottom: 3rem;
+        padding-bottom: 2rem;
+        border-bottom: 2px solid rgba(227, 5, 26, 0.1);
+      }
+
+      .content-header h1 {
+        margin: 0 0 0.75rem 0;
+        font-family: var(--font-serif);
+        font-size: 3rem;
+        line-height: 1.2;
+        font-weight: 600;
+        color: var(--on-surface);
+      }
+
+      .subtitle {
+        font-size: 1.375rem;
+        color: var(--on-surface-variant);
+        margin: 0 0 1.5rem 0;
+        line-height: 1.4;
+      }
+
+      .meta {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        color: var(--primary);
+        font-size: 0.9375rem;
+        font-weight: 500;
+      }
+
+      .meta svg {
+        flex-shrink: 0;
+      }
+
+      .article-content {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .article-content :global(h2) {
+        font-family: var(--font-serif);
+        font-size: 2rem;
+        font-weight: 600;
+        margin: 2.5rem 0 1.25rem 0;
+        color: var(--on-surface);
+      }
+
+      .article-content :global(h3) {
+        font-family: var(--font-serif);
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin: 2rem 0 1rem 0;
+        color: var(--on-surface);
+      }
+
+      .article-content :global(p) {
+        margin: 1rem 0;
+        line-height: 1.7;
+        color: var(--on-surface);
+      }
+
+      .article-content :global(ul),
+      .article-content :global(ol) {
+        margin: 1.5rem 0;
+        padding-left: 2rem;
+        line-height: 1.7;
+      }
+
+      .article-content :global(li) {
+        margin: 0.5rem 0;
+      }
+
+      .article-content :global(strong) {
+        font-weight: 600;
+        color: var(--on-surface);
+      }
+
+      .article-content :global(a) {
+        color: var(--primary);
+        text-decoration: underline;
+        transition: opacity 0.2s;
+      }
+
+      .article-content :global(a:hover) {
+        opacity: 0.8;
+      }
+
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-top: 3rem;
+        padding: 0.75rem 1.5rem;
+        background: var(--surface);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        border-radius: 0;
+        text-decoration: none;
+        color: var(--on-surface);
+        font-weight: 500;
+        transition: all 0.2s;
+      }
+
+      .back-link:hover {
+        border-color: var(--primary);
+        transform: translateX(-4px);
+      }
+
+      @media (max-width: 768px) {
+        main {
+          padding: 3rem 1rem;
+        }
+
+        .content-header h1 {
+          font-size: 2.25rem;
+        }
+
+        .subtitle {
+          font-size: 1.125rem;
+        }
+
+        .article-content :global(h2) {
+          font-size: 1.75rem;
+        }
+
+        .article-content :global(h3) {
+          font-size: 1.375rem;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <Header />
+    <ProClenyLock />
+    <main>
+      <article>
+        <div class="content-header">
+          <h1>{title}</h1>
+          {subtitle && <p class="subtitle">{subtitle}</p>}
+          <div class="meta">
+            <CalendarIcon size={20} color="var(--primary)" />
+            <FormattedDate date={datetime} />
+          </div>
+        </div>
+
+        <div class="article-content">
+          <slot />
+        </div>
+
+        <a href="/pro-cleny" class="back-link">
+          <span>←</span>
+          <span>Zpět na přehled</span>
+        </a>
+      </article>
+    </main>
+    <Footer />
+  </body>
+</html>

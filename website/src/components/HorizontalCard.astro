@@ -1,0 +1,161 @@
+---
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+import LocationIcon from "./icons/LocationIcon.astro";
+
+interface Props {
+  event: CollectionEntry<"events">;
+}
+
+const { event } = Astro.props;
+const heroImage = event.data.heroImage || "/placeholder-hero.jpg";
+---
+
+<article class="horizontal-card">
+  <a href={`/events/${event.id}`} class="horizontal-card-link">
+    <div class="horizontal-card-container">
+      <div class="horizontal-card-image">
+        <Image
+          src={heroImage}
+          alt={event.data.title}
+          width={600}
+          height={400}
+        />
+      </div>
+
+      <div class="horizontal-card-body">
+        <time datetime={event.data.datetime.toISOString()}>
+          {
+            event.data.datetime.toLocaleDateString("cs-CZ", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })
+          }
+        </time>
+
+        <h3>{event.data.title}</h3>
+
+        <p class="description">{event.data.description}</p>
+
+        {
+          event.data.location && (
+            <div class="location">
+              <LocationIcon size={18} />
+              <span>{event.data.location}</span>
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </a>
+</article>
+
+<style>
+  .horizontal-card {
+    background: #ffffff;
+    border: 1px solid rgba(227, 5, 26, 0.1);
+    border-radius: 0;
+    overflow: hidden;
+    transition: box-shadow 0.2s ease;
+  }
+
+  .horizontal-card:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  }
+
+  .horizontal-card-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .horizontal-card-container {
+    display: flex;
+    min-height: 240px;
+  }
+
+  .horizontal-card-image {
+    width: 40%;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .horizontal-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 0;
+  }
+
+  .horizontal-card-image img[src="/placeholder-hero.jpg"] {
+    border-right: 1px solid rgba(227, 5, 26, 0.1);
+  }
+
+  .horizontal-card-body {
+    width: 60%;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .horizontal-card time {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 1rem;
+  }
+
+  .horizontal-card h3 {
+    margin: 0 0 1rem 0;
+    font-size: 1.5rem;
+    font-family: var(--font-serif);
+    font-weight: 600;
+    color: var(--on-surface);
+  }
+
+  .horizontal-card .description {
+    margin: 0 0 1rem 0;
+    color: var(--on-surface);
+    line-height: 1.6;
+    font-size: 1rem;
+  }
+
+  .horizontal-card .location {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: rgba(26, 28, 30, 0.6);
+  }
+
+  @media (max-width: 768px) {
+    .horizontal-card-container {
+      flex-direction: column;
+      min-height: auto;
+    }
+
+    .horizontal-card-image,
+    .horizontal-card-body {
+      width: 100%;
+    }
+
+    .horizontal-card-image {
+      height: 200px;
+    }
+
+    .horizontal-card-body {
+      padding: 1.5rem;
+    }
+
+    .horizontal-card h3 {
+      font-size: 1.25rem;
+    }
+  }
+</style>

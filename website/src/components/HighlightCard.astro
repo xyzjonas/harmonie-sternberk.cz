@@ -1,0 +1,165 @@
+---
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+import LocationIcon from "./icons/LocationIcon.astro";
+
+interface Props {
+  event: CollectionEntry<"events">;
+}
+
+const { event } = Astro.props;
+const heroImage = event.data.heroImage || "/placeholder-hero.jpg";
+---
+
+<article class="highlight-card">
+  <div class="highlight-card-container">
+    <div class="highlight-card-image">
+      <Image src={heroImage} alt={event.data.title} width={800} height={600} />
+    </div>
+
+    <div class="highlight-card-body">
+      <time datetime={event.data.datetime.toISOString()}>
+        {
+          event.data.datetime.toLocaleDateString("cs-CZ", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          })
+        }
+      </time>
+
+      <h2>{event.data.title}</h2>
+
+      <p class="description">{event.data.description}</p>
+
+      {
+        event.data.location && (
+          <div class="location">
+            <LocationIcon size={20} />
+            <span>{event.data.location}</span>
+          </div>
+        )
+      }
+      <div>
+        <a href={`/events/${event.id}`} class="button-like"> Více informací </a>
+      </div>
+    </div>
+  </div>
+</article>
+
+<style>
+  .highlight-card {
+    background: var(--surface-container-low);
+    border: 1px solid rgba(227, 5, 26, 0.1);
+    border-radius: 0;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .highlight-card-container {
+    display: flex;
+    min-height: 600px;
+  }
+
+  .highlight-card-image {
+    width: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .highlight-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .highlight-card-image img[src="/placeholder-hero.jpg"] {
+    border-right: 1px solid rgba(227, 5, 26, 0.1);
+  }
+
+  .highlight-card-body {
+    width: 50%;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .highlight-card time {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: large;
+    letter-spacing: 1px;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 1rem;
+  }
+
+  .highlight-card h2 {
+    margin: 0 0 1.5rem 0;
+    font-size: 2.5rem;
+    font-family: var(--font-serif);
+    font-weight: 600;
+    color: var(--on-surface);
+  }
+
+  .highlight-card .description {
+    margin: 0 0 2rem 0;
+    color: var(--on-surface);
+    line-height: 1.6;
+    font-size: 1.125rem;
+  }
+
+  .highlight-card .location {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: rgba(26, 28, 30, 0.6);
+    margin-bottom: 2rem;
+  }
+
+  .detail-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--primary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .detail-link:hover {
+    color: var(--primary-dark);
+    opacity: 1;
+  }
+
+  @media (max-width: 768px) {
+    .highlight-card-container {
+      flex-direction: column;
+      min-height: auto;
+    }
+
+    .highlight-card-image,
+    .highlight-card-body {
+      width: 100%;
+    }
+
+    .highlight-card-image {
+      height: 300px;
+    }
+
+    .highlight-card-body {
+      padding: 2rem;
+    }
+
+    .highlight-card h2 {
+      font-size: 2rem;
+    }
+  }
+</style>

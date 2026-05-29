@@ -1,0 +1,305 @@
+---
+import { Image } from "astro:assets";
+import BaseHead from "../components/BaseHead.astro";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import StructuredData from "../components/StructuredData.astro";
+import { SITE_TITLE } from "../consts";
+import aboutImage1 from "../../public/photos/web/about-1.jpg";
+import aboutImage2 from "../../public/photos/web/about-2.jpg";
+---
+
+<!doctype html>
+<html lang="cs">
+  <head>
+    <BaseHead
+      title={`Orchestr | ${SITE_TITLE}`}
+      description="Historie a úspěchy Harmonie Šternberk"
+    />
+    <StructuredData
+      breadcrumbs={[
+        { name: "Domů", url: "/" },
+        { name: "Orchestr", url: "/orchestra" },
+      ]}
+    />
+  </head>
+  <body>
+    <Header />
+    <main>
+      <article class="orchestra-page">
+        <section class="intro">
+          <div class="intro-content">
+            <h1>Harmonie Šternberk</h1>
+
+            <p class="lead">
+              je symfonický dechový orchestr, který byl založen krátce po vzniku
+              hudební školy ve Šternberku - první vystoupení tohoto souboru je
+              zaznamenáno v r. 1957.
+            </p>
+
+            <p>
+              Novodobá historie orchestru se datuje od r. 1999 s příchodem
+              nynějšího dirigenta a ředitele ZUŠ Šternberk
+              <strong>Petra Ciby</strong>, kdy došlo k postupnému navyšování
+              počtu členů a zásadní změně repertoáru, který akcentuje původní
+              skladby či transkripce z oblasti moderní umělecké symfonické
+              dechové hudby.
+            </p>
+          </div>
+          <div class="intro-images">
+            <Image src={aboutImage1} alt="Harmonie Šternberk orchestra" />
+          </div>
+        </section>
+
+        <section class="achievements">
+          <h2>Nejvýznamnější úspěchy Harmonie Šternberk</h2>
+          <ul>
+            <li>
+              účast na koncertu vítězů rozhlasové soutěže Concerto Bohemia 2002
+              a 2007
+            </li>
+            <li>
+              zisk 1. místa na mezinárodním soutěžním festivale mládeže v
+              belgickém Neerpeltu (2003 a 2005)
+            </li>
+            <li>
+              zisk 1. místa na mezinárodní soutěži v italském Sinnai (Sardinie
+              2011)
+            </li>
+            <li>
+              absolutní vítěz mezinárodních soutěží v Praze (2007, 2009, 2017) a
+              Ostravě (2007, 2013, 2015, 2019, 2021)
+            </li>
+          </ul>
+        </section>
+
+        <section class="current">
+          <div class="content-with-image">
+            <div class="text">
+              <p>
+                V současné době má orchestr přibližně <strong>60 členů</strong> a
+                je složen především ze současných i bývalých žáků základní umělecké
+                školy ve Šternberku a studentů středních a vysokých škol. Orchestr
+                každoročně absolvuje řadu koncertních vystoupení a pravidelně se účastní
+                soutěží, festivalů a přehlídek dechových orchestrů v České republice
+                i v zahraničí.
+              </p>
+            </div>
+            <div class="image">
+              <Image src={aboutImage2} alt="Orchestr performance" />
+            </div>
+          </div>
+        </section>
+
+        <section class="highlights">
+          <h2>Vrcholy dosavadní činnosti orchestru</h2>
+          <ul>
+            <li>
+              účast na 10. ročníku Japonského hudebního festivalu mládeže ve
+              městě Shizuoka v roce 2006
+            </li>
+            <li>
+              trojnásobná účast na světové soutěži WMC (World Music Contest) v
+              holandském Kerkrade v letech 2009, 2013 a 2017
+            </li>
+          </ul>
+
+          <h3>Ocenění</h3>
+          <ul>
+            <li>Cena města Šternberka 2013</li>
+            <li>Cena Olomouckého kraje za přínos v oblasti kultury 2014</li>
+          </ul>
+        </section>
+      </article>
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style>
+  main {
+    width: 100%;
+    max-width: var(--content-width);
+    margin: 0 auto;
+    padding: 4rem 2rem 6rem;
+  }
+
+  .orchestra-page {
+    line-height: 1.65;
+  }
+
+  h1 {
+    font-family: var(--font-serif);
+    font-size: 3.5rem;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+    line-height: 1.1;
+  }
+
+  h2 {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    margin-top: 0;
+    margin-bottom: 2rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+
+  h3 {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    margin-top: 3rem;
+    margin-bottom: 1.25rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  section {
+    margin-bottom: 5rem;
+  }
+
+  section:last-child {
+    margin-bottom: 0;
+  }
+
+  p {
+    margin-bottom: 1.25rem;
+    color: var(--on-surface);
+    max-width: 65ch;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+
+  .lead {
+    font-size: 1.25rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+
+  ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+
+  ul li {
+    padding-left: 2rem;
+    margin-bottom: 1rem;
+    position: relative;
+    line-height: 1.65;
+  }
+
+  ul li:last-child {
+    margin-bottom: 0;
+  }
+
+  ul li:before {
+    content: "›";
+    position: absolute;
+    left: 0.25rem;
+    top: -0.05em;
+    color: var(--primary);
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  strong {
+    color: var(--primary);
+    font-weight: 600;
+  }
+
+  .intro {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 4rem;
+    align-items: start;
+    margin-bottom: 6rem;
+  }
+
+  .intro-content h1 {
+    margin-top: 0;
+  }
+
+  .intro-images img {
+    width: 100%;
+    height: auto;
+    border-radius: 0;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+
+  .achievements {
+    max-width: 900px;
+  }
+
+  .achievements h2 {
+    margin-bottom: 2rem;
+  }
+
+  .current {
+    margin-bottom: 5rem;
+  }
+
+  .content-with-image {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .content-with-image .image img {
+    width: 100%;
+    height: auto;
+    border-radius: 0;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+
+  .highlights {
+    max-width: 900px;
+  }
+
+  .highlights h2 {
+    margin-bottom: 2rem;
+  }
+
+  @media (max-width: 900px) {
+    main {
+      padding: 3rem 1.5rem 4rem;
+    }
+
+    .intro {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+      margin-bottom: 4rem;
+    }
+
+    .content-with-image {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    h1 {
+      font-size: 2.75rem;
+    }
+
+    h2 {
+      font-size: 1.75rem;
+    }
+
+    section {
+      margin-bottom: 3.5rem;
+    }
+
+    .intro-images img,
+    .content-with-image .image img {
+      aspect-ratio: 16 / 10;
+    }
+  }
+</style>

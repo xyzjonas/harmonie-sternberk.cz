@@ -1,0 +1,373 @@
+---
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+import BaseHead from "../components/BaseHead.astro";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
+import heroImage from "../../public/photos/web/carousel-1-optimized.webp";
+import HeaderLink from "../components/HeaderLink.astro";
+import EventCard from "../components/EventCard.astro";
+import HighlightCard from "../components/HighlightCard.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+
+const allEvents = (await getCollection("events")).sort(
+  (a, b) => a.data.datetime.valueOf() - b.data.datetime.valueOf(),
+);
+
+const now = new Date();
+const allUpcomingEvents = allEvents.filter(
+  (event) => event.data.datetime > now,
+);
+
+const highlightEvent = allUpcomingEvents.find((event) => event.data.highlight);
+const regularEvents = allUpcomingEvents.filter(
+  (event) => !event.data.highlight,
+);
+const displayedRegularEvents = regularEvents.slice(0, 2);
+const hasMoreEvents = regularEvents.length > 2;
+---
+
+<!doctype html>
+<html lang="cs">
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+  </head>
+  <body>
+    <Header />
+    <main>
+      <section class="hero">
+        <div class="hero-image">
+          <Image
+            src={heroImage}
+            alt="Harmonie Šternberk"
+            loading="eager"
+            fetchpriority="high"
+            widths={[640, 1024, 1920]}
+            sizes="100vw"
+          />
+        </div>
+        <div class="hero-content">
+          <h1 style="color: white !important">Harmonie Šternberk</h1>
+          <p class="subtitle">
+            Symfonický dechový orchestr založený v roce 1957
+          </p>
+          <div class="hero-buttons">
+            <a href="#nejblizsi-akce" class="hero-button primary">Sezóna 2026</a
+            >
+            <a href="/orchestra" class="hero-button secondary">Orchestr</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="upcoming-events" id="nejblizsi-akce">
+        <div class="title row-between">
+          <div>
+            <SectionHeading text="Nadcházející akce" />
+            <h2>Nejbližší Koncerty</h2>
+          </div>
+
+          <HeaderLink href="/events" class="all-events">
+            <small> Archiv koncertů </small>
+          </HeaderLink>
+        </div>
+
+        {
+          allUpcomingEvents.length > 0 ? (
+            <div class="events-container">
+              {highlightEvent && (
+                <div class="highlight-section">
+                  <HighlightCard event={highlightEvent} />
+                </div>
+              )}
+              {displayedRegularEvents.length > 0 && (
+                <div class="events-grid">
+                  {displayedRegularEvents.map((event) => (
+                    <EventCard event={event} />
+                  ))}
+                </div>
+              )}
+              {hasMoreEvents && (
+                <div class="show-more">
+                  <a href="/events" class="show-more-link">
+                    Zobrazit všechny koncerty →
+                  </a>
+                </div>
+              )}
+            </div>
+          ) : (
+            <p class="no-events">Momentálně nemáme naplánované žádné akce</p>
+          )
+        }
+      </section>
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style>
+  main {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  .hero {
+    position: relative;
+    height: 70vh;
+    min-height: 500px;
+    max-height: 800px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+
+  .hero-image::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.4),
+      rgba(0, 0, 0, 0.7)
+    );
+  }
+
+  .hero-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 2rem;
+    max-width: 900px;
+  }
+
+  .hero h1 {
+    font-size: 4rem;
+    margin: 0;
+    letter-spacing: 0.02em;
+    color: #ffffff;
+    text-shadow: 2px 2px 12px rgba(0, 0, 0, 0.8);
+  }
+
+  .hero .subtitle {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    margin-top: 1rem;
+    margin-bottom: 2.5rem;
+    color: rgba(255, 255, 255, 0.95);
+    text-shadow: 1px 1px 8px rgba(0, 0, 0, 0.8);
+  }
+
+  .hero-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .hero-button {
+    display: inline-block;
+    padding: 0.875rem 2rem;
+    border-radius: 0;
+    text-decoration: none;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+  }
+
+  .hero-button.primary {
+    background: var(--primary);
+    color: var(--on-primary);
+    border: 1px solid var(--primary);
+  }
+
+  .hero-button.primary:hover {
+    background: var(--accent-dark);
+    border-color: var(--accent-dark);
+    opacity: 1;
+  }
+
+  .hero-button.secondary {
+    background: transparent;
+    color: #ffffff;
+    border: 1px solid #ffffff;
+  }
+
+  .hero-button.secondary:hover {
+    background: rgba(255, 255, 255, 0.15);
+    opacity: 1;
+  }
+
+  @media (max-width: 720px) {
+    .hero {
+      height: 60vh;
+      min-height: 400px;
+    }
+    .hero h1 {
+      font-size: 2.5rem;
+    }
+    .hero .subtitle {
+      font-size: 1.125rem;
+      margin-bottom: 2rem;
+    }
+    .hero-buttons {
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .hero-button {
+      width: 100%;
+      max-width: 280px;
+    }
+  }
+
+  .upcoming-events {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 4rem 1rem;
+  }
+
+  .upcoming-events .subtitle {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: small;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    font-family: var(--font-sans);
+    color: var(--primary-dark);
+  }
+
+  .upcoming-events .row-between {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: space-between;
+  }
+
+  @media (min-width: 768px) {
+    .upcoming-events .row-between {
+      flex-direction: row;
+      align-items: center;
+    }
+  }
+
+  .upcoming-events .title {
+    margin-bottom: 3rem;
+  }
+
+  .upcoming-events .icon {
+    display: none;
+  }
+
+  .all-events {
+    border-bottom: 2px solid rgba(227, 5, 26, 0.2);
+  }
+
+  .events-container {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .highlight-section {
+    margin-bottom: 1rem;
+  }
+
+  .events-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+
+  @media (max-width: 768px) {
+    .events-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .show-more {
+    text-align: center;
+    padding-top: 1rem;
+  }
+
+  .show-more-link {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--primary);
+    text-decoration: none;
+    padding: 0.75rem 2rem;
+    border: 1px solid var(--primary);
+    border-radius: 0;
+    transition: all 0.2s ease;
+  }
+
+  .show-more-link:hover {
+    background: var(--primary);
+    color: var(--on-primary);
+    opacity: 1;
+  }
+
+  .event-card {
+    background: #ffffff;
+    border: 1px solid rgba(227, 5, 26, 0.1);
+    border-radius: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.2s ease;
+  }
+
+  .button {
+    display: inline-block;
+    padding: 0.875rem 2rem;
+    background: transparent;
+    color: var(--primary);
+    border: 1px solid var(--primary);
+    border-radius: 0;
+    text-decoration: none;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: all 0.2s ease;
+  }
+
+  .button:hover {
+    background: var(--primary);
+    color: var(--on-primary);
+    opacity: 1;
+  }
+
+  .no-events {
+    text-align: center;
+    padding: 3rem;
+    padding-block: 10rem;
+    color: #666;
+  }
+</style>
