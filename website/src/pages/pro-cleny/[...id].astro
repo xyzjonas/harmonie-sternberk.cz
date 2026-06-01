@@ -1,0 +1,20 @@
+---
+import { render } from 'astro:content';
+import { getCollection } from 'astro:content';
+import ProClenyPost from '../../layouts/ProClenyPost.astro';
+
+export async function getStaticPaths() {
+	const posts = await getCollection('proCleny');
+	return posts.map((post) => ({
+		params: { id: post.id },
+		props: { post },
+	}));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<ProClenyPost {...post.data}>
+	<Content />
+</ProClenyPost>

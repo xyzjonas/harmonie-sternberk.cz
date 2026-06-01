@@ -1,0 +1,162 @@
+---
+import { getCollection } from "astro:content";
+import BaseHead from "../../components/BaseHead.astro";
+import Footer from "../../components/Footer.astro";
+import Header from "../../components/Header.astro";
+import EventCard from "../../components/EventCard.astro";
+import HorizontalCard from "../../components/HorizontalCard.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import StructuredData from "../../components/StructuredData.astro";
+import { SITE_TITLE } from "../../consts";
+
+const allEvents = (await getCollection("events")).sort(
+  (a, b) => a.data.datetime.valueOf() - b.data.datetime.valueOf(),
+);
+
+const now = new Date();
+const upcomingEvents = allEvents.filter((event) => event.data.datetime > now);
+const pastEvents = allEvents
+  .filter((event) => event.data.datetime <= now)
+  .reverse();
+---
+
+<!doctype html>
+<html lang="cs">
+  <head>
+    <BaseHead
+      title={`Program | ${SITE_TITLE}`}
+      description="Program akcí Harmonie Šternberk"
+    />
+    <StructuredData
+      breadcrumbs={[
+        { name: "Domů", url: "/" },
+        { name: "Program", url: "/events" },
+      ]}
+    />
+  </head>
+  <body>
+    <Header />
+    <main>
+      <h1>Program</h1>
+
+      {
+        upcomingEvents.length > 0 && (
+          <section class="events-section">
+            <div class="section-header">
+              <SectionHeading text="Nadcházející Koncerty" />
+            </div>
+
+            <div class="events-list">
+              {upcomingEvents.map((event) => (
+                <HorizontalCard event={event} />
+              ))}
+            </div>
+          </section>
+        )
+      }
+
+      {
+        pastEvents.length > 0 && (
+          <section class="events-section">
+            <div class="section-header">
+              <SectionHeading text="Archiv" />
+            </div>
+
+            <div class="events-list">
+              {pastEvents.map((event) => (
+                <HorizontalCard event={event} />
+              ))}
+            </div>
+          </section>
+        )
+      }
+
+      {
+        upcomingEvents.length === 0 && pastEvents.length === 0 && (
+          <p class="no-events">Zatím nejsou k dispozici žádné akce.</p>
+        )
+      }
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style>
+  main {
+    width: 100%;
+    max-width: var(--content-width);
+    margin: 0 auto;
+    padding: 4rem 1rem;
+  }
+
+  h1 {
+    font-family: var(--font-serif);
+    font-size: 3rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    font-weight: 600;
+  }
+
+  .events-section {
+    margin-bottom: 5rem;
+  }
+
+  .events-section:last-of-type {
+    margin-bottom: 0;
+  }
+
+  .section-header {
+    margin-bottom: 3rem;
+  }
+
+  .section-header h2 {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: var(--on-surface);
+  }
+
+  .events-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+
+  .events-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .no-events {
+    text-align: center;
+    padding: 3rem;
+    color: #666;
+    font-size: 1.125rem;
+  }
+
+  @media (max-width: 768px) {
+    main {
+      padding: 3rem 1rem;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .events-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .section-header h2 {
+      font-size: 2rem;
+    }
+
+    .events-section {
+      margin-bottom: 4rem;
+    }
+  }
+</style>

@@ -1,0 +1,90 @@
+---
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+
+interface Props {
+	type?: 'organization' | 'event' | 'breadcrumb';
+	eventData?: {
+		name: string;
+		description: string;
+		startDate: string;
+		location: string;
+		image?: string;
+	};
+	breadcrumbs?: Array<{ name: string; url: string }>;
+}
+
+const { type = 'organization', eventData, breadcrumbs } = Astro.props;
+
+// Organization structured data (default, shown on all pages)
+const organizationData = {
+	'@context': 'https://schema.org',
+	'@type': 'PerformingGroup',
+	name: SITE_TITLE,
+	description: SITE_DESCRIPTION,
+	url: Astro.site,
+	foundingDate: '1957',
+	genre: 'Symfonická dechová hudba',
+	address: {
+		'@type': 'PostalAddress',
+		addressLocality: 'Šternberk',
+		addressCountry: 'CZ',
+	},
+	sameAs: [
+		// Add social media URLs here if available
+	],
+};
+
+// Event structured data
+const eventStructuredData = eventData
+	? {
+			'@context': 'https://schema.org',
+			'@type': 'MusicEvent',
+			name: eventData.name,
+			description: eventData.description,
+			startDate: eventData.startDate,
+			location: {
+				'@type': 'Place',
+				name: eventData.location,
+				address: {
+					'@type': 'PostalAddress',
+					addressLocality: 'Šternberk',
+					addressCountry: 'CZ',
+				},
+			},
+			performer: {
+				'@type': 'PerformingGroup',
+				name: SITE_TITLE,
+			},
+			image: eventData.image,
+			organizer: {
+				'@type': 'PerformingGroup',
+				name: SITE_TITLE,
+			},
+		}
+	: null;
+
+// Breadcrumb structured data
+const breadcrumbData = breadcrumbs
+	? {
+			'@context': 'https://schema.org',
+			'@type': 'BreadcrumbList',
+			itemListElement: breadcrumbs.map((crumb, index) => ({
+				'@type': 'ListItem',
+				position: index + 1,
+				name: crumb.name,
+				item: new URL(crumb.url, Astro.site).toString(),
+			})),
+		}
+	: null;
+---
+
+<!-- Always include organization data -->
+<script type="application/ld+json" set:html={JSON.stringify(organizationData)} />
+
+{eventStructuredData && (
+	<script type="application/ld+json" set:html={JSON.stringify(eventStructuredData)} />
+)}
+
+{breadcrumbData && (
+	<script type="application/ld+json" set:html={JSON.stringify(breadcrumbData)} />
+)}

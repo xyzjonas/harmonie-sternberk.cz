@@ -1,0 +1,253 @@
+---
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+import BaseHead from "../components/BaseHead.astro";
+import Footer from "../components/Footer.astro";
+import FormattedDate from "../components/FormattedDate.astro";
+import Header from "../components/Header.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import CalendarIcon from "../components/icons/CalendarIcon.astro";
+import ClockIcon from "../components/icons/ClockIcon.astro";
+import LocationIcon from "../components/icons/LocationIcon.astro";
+import StructuredData from "../components/StructuredData.astro";
+
+type Props = CollectionEntry<"events">["data"];
+
+const { title, description, datetime, location, heroImage, poster, hasTime } =
+  Astro.props;
+const showTime = hasTime ?? true;
+---
+
+<html lang="cs">
+  <head>
+    <BaseHead title={title} description={description} />
+    <StructuredData
+      type="event"
+      eventData={{
+        name: title,
+        description: description,
+        startDate: showTime
+          ? datetime.toISOString()
+          : datetime.toISOString().split("T")[0],
+        location: location || "Šternberk",
+        image: heroImage?.src,
+      }}
+    />
+    <style>
+      main {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+      }
+      .hero-image {
+        /* width: 100%; */
+        margin-inline: auto;
+        max-width: var(--content-width);
+        max-height: 300px;
+        overflow: hidden;
+      }
+      .hero-image img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 0;
+      }
+      .content {
+        width: calc(100% - 2rem);
+        max-width: 1200px;
+        margin: auto;
+        padding-top: 3rem;
+        color: var(--on-surface);
+      }
+      .main-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+      }
+      .left-column h1 {
+        margin: 0 0 2rem 0;
+        font-family: var(--font-serif);
+        font-size: 3rem;
+        line-height: 1.2;
+        font-weight: 600;
+      }
+      .body-text {
+        margin-bottom: 2rem;
+        line-height: 1.7;
+      }
+      .whereabouts {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+      }
+      .whereabouts-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        font-family: var(--font-serif);
+      }
+      .whereabouts-item svg {
+        color: var(--primary-dark);
+        flex-shrink: 0;
+      }
+      .whereabouts-value {
+        color: var(--on-surface);
+        font-size: 1.125rem;
+      }
+      .right-column {
+        display: flex;
+        flex-direction: column;
+      }
+      .poster-image {
+        width: 100%;
+        margin-bottom: 2rem;
+      }
+      .poster-image img {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+      .decorative-line {
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(to right, var(--primary), transparent);
+        margin-bottom: 2rem;
+      }
+      .pricing-info {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+        padding: 2rem 0;
+      }
+      .pricing-section h3 {
+        font-family: var(--font-sans);
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-weight: 700;
+        margin: 0 0 1rem 0;
+        color: var(--primary);
+      }
+      .price-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid rgba(227, 5, 26, 0.1);
+      }
+      .price-item:last-child {
+        border-bottom: none;
+      }
+      .price-label {
+        font-family: var(--font-sans);
+        font-size: 0.9375rem;
+      }
+      .price-value {
+        font-family: var(--font-serif);
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--primary);
+      }
+      .additional-info h3 {
+        font-family: var(--font-sans);
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-weight: 700;
+        margin: 0 0 1rem 0;
+        color: var(--primary);
+      }
+      .additional-info p {
+        line-height: 1.6;
+        margin: 0;
+      }
+
+      @media (max-width: 768px) {
+        .main-content {
+          grid-template-columns: 1fr;
+          gap: 2rem;
+        }
+        .left-column h1 {
+          font-size: 2.25rem;
+        }
+        .pricing-info {
+          grid-template-columns: 1fr;
+          gap: 2rem;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <Header />
+    <main>
+      <article>
+        {
+          heroImage && (
+            <div class="hero-image">
+              <Image src={heroImage} alt={title} width={1200} height={600} />
+            </div>
+          )
+        }
+        <div class="content">
+          <SectionHeading text="Symfonický dechový orchestr" />
+
+          <div class="main-content">
+            <div class="left-column">
+              <h1>{title}</h1>
+              <div class="body-text">
+                <slot />
+              </div>
+              <div class="whereabouts">
+                <div class="whereabouts-item">
+                  <CalendarIcon size={24} color="var(--primary-dark)" />
+                  <div class="whereabouts-value">
+                    <FormattedDate date={datetime} />
+                  </div>
+                </div>
+                <div class="whereabouts-item">
+                  <ClockIcon size={24} color="var(--primary-dark)" />
+                  <div class="whereabouts-value">
+                    {
+                      showTime
+                        ? datetime.toLocaleTimeString("cs-CZ", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })
+                        : "čas bude upřesněn"
+                    }
+                  </div>
+                </div>
+                {
+                  location && (
+                    <div class="whereabouts-item">
+                      <LocationIcon size={24} color="var(--primary-dark)" />
+                      <div class="whereabouts-value">{location}</div>
+                    </div>
+                  )
+                }
+              </div>
+            </div>
+
+            <div class="right-column">
+              {
+                poster && (
+                  <div class="poster-image">
+                    <Image
+                      src={poster}
+                      alt={`Plakát - ${title}`}
+                      width={600}
+                      height={800}
+                    />
+                  </div>
+                )
+              }
+            </div>
+          </div>
+        </div>
+      </article>
+    </main>
+    <Footer />
+  </body>
+</html>
