@@ -27,32 +27,33 @@ jobs:
       - name: Build Astro site
         working-directory: ./website
         run: npm run build
+      
+      # This just takes forever and is not really necessary since we have a backup, so skipping for now
+      # - name: Backup previous deployment
+      #   run: |
+      #     sudo apt-get update && sudo apt-get install -y lftp
 
-      - name: Backup previous deployment
-        run: |
-          sudo apt-get update && sudo apt-get install -y lftp
+      #     # Fail immediately if any command fails
+      #     set -e
 
-          # Fail immediately if any command fails
-          set -e
+      #     # Verify credentials are set
+      #     if [ -z "${{ secrets.FTP_USERNAME }}" ] || [ -z "${{ secrets.FTP_PASSWORD }}" ] || [ -z "${{ secrets.FTP_SERVER }}" ]; then
+      #       echo "Error: FTP credentials not configured"
+      #       exit 1
+      #     fi
 
-          # Verify credentials are set
-          if [ -z "${{ secrets.FTP_USERNAME }}" ] || [ -z "${{ secrets.FTP_PASSWORD }}" ] || [ -z "${{ secrets.FTP_SERVER }}" ]; then
-            echo "Error: FTP credentials not configured"
-            exit 1
-          fi
+      #     # Create backup by downloading current prod, then uploading to backup location
+      #     BACKUP_NAME="www_bak_$(date +%Y%m%d_%H%M%S)"
 
-          # Create backup by downloading current prod, then uploading to backup location
-          BACKUP_NAME="www_bak_$(date +%Y%m%d_%H%M%S)"
-
-          lftp -e "
-            set ssl:verify-certificate no;
-            set net:max-retries 1;
-            set net:timeout 30;
-            open -u ${{ secrets.FTP_USERNAME }},${{ secrets.FTP_PASSWORD }} ${{ secrets.FTP_SERVER }} || exit 1;
-            mirror -v public_html/www ./.temp_backup || exit 1;
-            mirror -v -R ./.temp_backup public_html/$BACKUP_NAME || exit 1;
-            bye
-          " || exit 1
+      #     lftp -e "
+      #       set ssl:verify-certificate no;
+      #       set net:max-retries 1;
+      #       set net:timeout 30;
+      #       open -u ${{ secrets.FTP_USERNAME }},${{ secrets.FTP_PASSWORD }} ${{ secrets.FTP_SERVER }} || exit 1;
+      #       mirror -v public_html/www ./.temp_backup || exit 1;
+      #       mirror -v -R ./.temp_backup public_html/$BACKUP_NAME || exit 1;
+      #       bye
+      #     " || exit 1
 
       - name: Deploy to FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
