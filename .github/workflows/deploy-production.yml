@@ -34,7 +34,7 @@ jobs:
           lftp -e "
             set ssl:verify-certificate no;
             open -u ${{ secrets.FTP_USERNAME }},${{ secrets.FTP_PASSWORD }} ${{ secrets.FTP_SERVER }};
-            mv public_html public_html_bak_$(date +%Y%m%d_%H%M%S) || echo 'No previous deployment to backup';
+            mv public_html/www public_html/www_bak_$(date +%Y%m%d_%H%M%S) || echo 'No previous deployment to backup';
             bye
           "
 
@@ -45,5 +45,5 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./website/dist/
-          server-dir: ./public_html/
+          server-dir: ./public_html/www
           dangerous-clean-slate: false
