@@ -41,11 +41,16 @@ jobs:
             exit 1
           fi
 
-          # Create backup with copy (not move) - fails if connection issues
+          # Create backup by downloading current prod, then uploading to backup location
+          BACKUP_NAME="www_bak_$(date +%Y%m%d_%H%M%S)"
+
           lftp -e "
             set ssl:verify-certificate no;
+            set net:max-retries 1;
+            set net:timeout 30;
             open -u ${{ secrets.FTP_USERNAME }},${{ secrets.FTP_PASSWORD }} ${{ secrets.FTP_SERVER }} || exit 1;
-            mirror -R public_html/www public_html/www_bak_$(date +%Y%m%d_%H%M%S) || exit 1;
+            mirror -v public_html/www ./.temp_backup || exit 1;
+            mirror -v -R ./.temp_backup public_html/$BACKUP_NAME || exit 1;
             bye
           " || exit 1
 
