@@ -10,9 +10,9 @@ isPinned: true
 
 **12. - 14. června** - Soutěž Rybník
 
-**20. června (sobota) v 9:00** - Zkouška  
+**20. června (sobota) v 9:00** - Zkouška
 
-**26. června (pátek) v 17:00** - Generální zkouška
+**26. června (pátek) v 17:00** - Generální zkouška (na pódiu u sportovní haly, přístup do šaten od 15.hod)
 
 **27. června (sobota)** - Filmový koncert  
 Šternberk
