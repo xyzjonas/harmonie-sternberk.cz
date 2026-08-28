@@ -1,18 +1,31 @@
 ---
 title: "Nadcházející zkoušky"
-datetime: 2026-05-31T00:00:00
+datetime: 2026-08-28T00:00:00
 isPinned: true
 ---
 
-**5. června (pátek) v 17:00** - Zkouška
+**12. září (sobota)** - Zkouška
 
-**11. června (čtvrtek) v 17:30** - Zkouška
+**18. září (pátek)** - Dělená zkouška - dřeva
 
-**12. - 14. června** - Soutěž Rybník
+**25. září (pátek)** - Zkouška
 
-**20. června (sobota) v 9:00** - Zkouška
+**3. října (sobota)** - Zkouška
 
-**26. června (pátek) v 17:00** - Generální zkouška (na pódiu u sportovní haly, přístup do šaten od 15.hod)
+**7. - 11. října** - Soustředění Česká Ves
 
-**27. června (sobota)** - Filmový koncert  
-Šternberk
+**23. října (pátek)** - Zkouška
+
+**7. listopadu (sobota)** - Zkouška
+
+**13. listopadu (pátek)** - Zkouška
+
+**20. listopadu (pátek)** - Dělená zkouška - dřeva
+
+**27. listopadu (pátek)** - Zkouška
+
+**5. prosince (sobota)** - Zkouška
+
+**11. prosince (pátek)** - Generální zkouška - MKZ
+
+**12. prosince** - Galakoncert
