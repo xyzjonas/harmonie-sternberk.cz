@@ -10,11 +10,20 @@ import CalendarIcon from "../components/icons/CalendarIcon.astro";
 import ClockIcon from "../components/icons/ClockIcon.astro";
 import LocationIcon from "../components/icons/LocationIcon.astro";
 import StructuredData from "../components/StructuredData.astro";
+import { DEFAULT_PERFORMER } from "../consts";
 
 type Props = CollectionEntry<"events">["data"];
 
-const { title, description, datetime, location, heroImage, poster, hasTime } =
-  Astro.props;
+const {
+  title,
+  description,
+  datetime,
+  location,
+  heroImage,
+  poster,
+  hasTime,
+  performer,
+} = Astro.props;
 const showTime = hasTime ?? true;
 ---
 
@@ -191,7 +200,7 @@ const showTime = hasTime ?? true;
           )
         }
         <div class="content">
-          <SectionHeading text="Symfonický dechový orchestr" />
+          <SectionHeading text={performer ?? DEFAULT_PERFORMER} />
 
           <div class="main-content">
             <div class="left-column">

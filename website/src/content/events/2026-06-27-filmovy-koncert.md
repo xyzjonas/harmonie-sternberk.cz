@@ -1,5 +1,5 @@
 ---
-title: "Koncert Filmových Melodií"
+title: "Koncert filmových melodií"
 description: "Tradiční koncert filmové hudby Harmonie Šternberk"
 datetime: 2026-06-27T18:30:00
 hasTime: true

@@ -1,5 +1,5 @@
 ---
-title: "Open air Koncert filmové hudby"
+title: "Open air koncert filmové hudby"
 description: "Venkovní koncert filmové hudby u haly Ecce Homo"
 datetime: 2024-06-29T20:30:00
 location: "Šternberk, v prostoru u haly Ecce Homo"
