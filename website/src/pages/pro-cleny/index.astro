@@ -11,10 +11,10 @@ const allPosts = (await getCollection("proCleny")).sort(
   (a, b) => b.data.datetime.valueOf() - a.data.datetime.valueOf(),
 );
 
-const pinnedPost = allPosts.find((post) => post.data.isPinned);
+const pinnedPosts = allPosts
+  .filter((post) => post.data.isPinned)
+  .map(async (post) => ({ post: post, content: await render(post) }));
 const regularPosts = allPosts.filter((post) => !post.data.isPinned);
-
-const pinnedContent = pinnedPost ? await render(pinnedPost) : null;
 
 const formatDate = (date: Date) => {
   return new Intl.DateTimeFormat("cs-CZ", {
@@ -46,14 +46,20 @@ const formatDate = (date: Date) => {
       <h1>Pro členy</h1>
 
       {
-        pinnedPost && pinnedContent && (
+        pinnedPosts.length > 0 && (
           <section class="pinned-section">
-            <div class="pinned-post">
-              <h2 class="pinned-title">{pinnedPost.data.title}</h2>
-              <div class="pinned-content">
-                <pinnedContent.Content />
-              </div>
-            </div>
+            {await Promise.all(pinnedPosts).then((pinnedPosts) =>
+              pinnedPosts.map(({ post, content }) => (
+                <div
+                  class={`pinned-post ${post.data.isHighlight ? "highlighted-post" : ""}`}
+                >
+                  <h2 class="pinned-title">{post.data.title}</h2>
+                  <div class="pinned-content">
+                    <content.Content />
+                  </div>
+                </div>
+              )),
+            )}
           </section>
         )
       }
@@ -81,7 +87,7 @@ const formatDate = (date: Date) => {
       }
 
       {
-        !pinnedPost && regularPosts.length === 0 && (
+        pinnedPosts.length === 0 && regularPosts.length === 0 && (
           <p class="no-posts">Zatím nejsou k dispozici žádné příspěvky.</p>
         )
       }
@@ -137,9 +143,14 @@ const formatDate = (date: Date) => {
 
   .pinned-post {
     background: var(--surface);
-    border: 2px solid var(--primary);
+    border: 2px solid rgba(137, 93, 93, 0.189);
     border-radius: 0;
     padding: 2rem;
+    margin-block: 1rem;
+  }
+
+  .highlighted-post {
+    border: 2px solid var(--primary);
   }
 
   .pinned-title {

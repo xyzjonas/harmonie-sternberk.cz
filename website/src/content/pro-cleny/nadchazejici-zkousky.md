@@ -2,6 +2,7 @@
 title: "Nadcházející zkoušky"
 datetime: 2026-08-28T00:00:00
 isPinned: true
+isHighlight: true
 ---
 
 **12. září (sobota)** - Zkouška

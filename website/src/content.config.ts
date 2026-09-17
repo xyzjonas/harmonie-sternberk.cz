@@ -27,6 +27,7 @@ const proCleny = defineCollection({
     subtitle: z.string().optional(),
     datetime: z.coerce.date(),
     isPinned: z.boolean().optional(),
+    isHighlight: z.boolean().optional(),
   }),
 });
 
